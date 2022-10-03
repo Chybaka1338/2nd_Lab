@@ -209,6 +209,7 @@ namespace _2nd_Lab
         {
             int numberExams = 4;
             Student student = new Student();
+            bool isFailed;
             int failedExam = 0;
             int[] passedExam = new int[] { 0, 0, 0, 0 };
             double[] averageMark = new double[] { 0, 0, 0, 0 };
@@ -217,28 +218,27 @@ namespace _2nd_Lab
             Console.WriteLine("To stop entering data, enter any character or string");
             while (true)
             {
+                isFailed = false;
                 Console.WriteLine($"Student's number №{number}");
                 try
                 {
                     for (int i = 0; i < numberExams; i++)
                     {
                         student[i] = int.Parse(Console.ReadLine());
-                        if (student[i] != 2)
-                        {
-                            averageMark[i] += student[i];
-                            if (student[i] != 2)
-                            {
-                                passedExam[i]++;
-                            }
-                        }
-                    }
-
-                    for (int i = 0; i < numberExams; i++)
-                    {
                         if (student[i] == 2)
                         {
                             failedExam++;
+                            isFailed = true;
                             break;
+                        }
+                    }
+
+                    if (!isFailed)
+                    {
+                        for (int i = 0; i < numberExams; i++)
+                        {
+                            passedExam[i]++;
+                            averageMark[i] += student[i];
                         }
                     }
                 }
@@ -255,11 +255,12 @@ namespace _2nd_Lab
                 try
                 {
                     averageMark[i] /= passedExam[i];
+                    if (double.IsNaN(averageMark[i])) throw new DivideByZeroException();
                     Console.WriteLine($"exam No. {i} average score: {averageMark[i]}");
                 }
                 catch (DivideByZeroException)
                 {
-                    Console.WriteLine($"No one passed exam No. {i}");
+                    Console.WriteLine($"No one passed exam No. {i + 1}");
                 }
             }
 
